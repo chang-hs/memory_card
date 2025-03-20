@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block title%}{{ title }}{% endblock %}
+{% set weekday_list = ['月', '火', '水', '木', '金', '土', '日'] %}
+{% block content %}
+    <nav class="navbar navbar-expand-lg bg-body-tertiary mb-3">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <img src="/static/icon.png">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+                aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav">
+                    <a class="nav-link active" aria-current="page" href="{{ url_for('list_cards') }}">List</a>
+                    <a class="nav-link" href="{{ url_for('register') }}">Register</a>
+                </div>
+                <div class="navbar-bav ms-auto me-3">
+                    <a class="nav-link" href="{{ url_for('logout')}}">Logout</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div>
+        <h2>List of Operations to be Scheduled</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Patient ID</th>
+                    <th>Name</th>
+                    <th>Age</th>
+                    <th>診断</th>
+                    <th>手術時間</th>
+                    <th>緊急度</th>
+                    <th>Memo</th>
+                    <th>術前検査日</th>
+                    <th>手術日</th>
+                    <th>date_set</th>
+                    <th>患者連絡</th>
+                    <th>Order Committed</th>
+                    <th>Phone</th>
+                    <th>Created At</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for op in ops %}
+                <tr>
+                    <td>{{ op.id }}</td>
+                    <td>{{ op.patient_id }}</td>
+                    <td>{{ op.name }}</td>
+                    <td>{{ op.age }}</td>
+                    <td>{{ op.diagnosis }}</td>
+                    <td>{{ op.op_duration }}</td>
+                    <td>{{ op.urgency }}</td>
+                    <td>{{ op.memo }}</td>
+                    {% if op.preop_date %}
+                        {% set date_string = weekday_list[op.preop_date.weekday()] + op.preop_date.strftime('%Y-%m-%d') %}
+                        <td>{{ date_string }}</td>
+                    {% else %}
+                        <td>{{ op.preop_date }}</td>
+                    {% endif %}
+                    {% if op.op_date %}
+                        {% set date_string = weekday_list[op.op_date.weekday()] + op.op_date.strftime('%Y-%m-%d') %}
+                        <td>{{ date_string }}</td>
+                    {% else %}
+                        <td>{{ op.op_date }}</td>
+                    {% endif %}
+                    <td>
+                        {% if op.date_set %}
+                            <button class="btn btn-success">済</button>
+                        {% else %}
+                            <button class="btn btn-danger">未</button>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if op.patient_notified %}
+                            <button class="btn btn-success">済</button>
+                        {% else %}
+                            <button class="btn btn-danger">未</button>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if op.orders_committed %}
+                            <button class="btn btn-success">済</button>
+                        {% else %}
+                            <button class="btn btn-danger">未</button>
+                        {% endif %}
+                    </td>
+                    <td>{{ op.phone }}</td>
+                    <td>{{ op.created_at }}</td>
+                    <td><a href="{{ url_for('edit_op', op_id=op.id) }}" >Edit</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
