@@ -23,74 +23,32 @@
         </div>
     </nav>
     <div>
-        <h2>List of Operations to be Scheduled</h2>
+        <h2>List of Cards</h2>
         <table class="table">
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Patient ID</th>
-                    <th>Name</th>
-                    <th>Age</th>
-                    <th>診断</th>
-                    <th>手術時間</th>
-                    <th>緊急度</th>
-                    <th>Memo</th>
-                    <th>術前検査日</th>
-                    <th>手術日</th>
-                    <th>date_set</th>
-                    <th>患者連絡</th>
-                    <th>Order Committed</th>
-                    <th>Phone</th>
-                    <th>Created At</th>
+                    <th>Lang</th>
+                    <th>word</th>
+                    <th>func</th>
+                    <th>meaning</th>
+                    <th>learnt</th>
+                    <th>difficulty</th>
+                    <th>created</th>
                 </tr>
             </thead>
             <tbody>
-                {% for op in ops %}
+                {% for card in cards %}
                 <tr>
-                    <td>{{ op.id }}</td>
-                    <td>{{ op.patient_id }}</td>
-                    <td>{{ op.name }}</td>
-                    <td>{{ op.age }}</td>
-                    <td>{{ op.diagnosis }}</td>
-                    <td>{{ op.op_duration }}</td>
-                    <td>{{ op.urgency }}</td>
-                    <td>{{ op.memo }}</td>
-                    {% if op.preop_date %}
-                        {% set date_string = weekday_list[op.preop_date.weekday()] + op.preop_date.strftime('%Y-%m-%d') %}
-                        <td>{{ date_string }}</td>
-                    {% else %}
-                        <td>{{ op.preop_date }}</td>
-                    {% endif %}
-                    {% if op.op_date %}
-                        {% set date_string = weekday_list[op.op_date.weekday()] + op.op_date.strftime('%Y-%m-%d') %}
-                        <td>{{ date_string }}</td>
-                    {% else %}
-                        <td>{{ op.op_date }}</td>
-                    {% endif %}
-                    <td>
-                        {% if op.date_set %}
-                            <button class="btn btn-success">済</button>
-                        {% else %}
-                            <button class="btn btn-danger">未</button>
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if op.patient_notified %}
-                            <button class="btn btn-success">済</button>
-                        {% else %}
-                            <button class="btn btn-danger">未</button>
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if op.orders_committed %}
-                            <button class="btn btn-success">済</button>
-                        {% else %}
-                            <button class="btn btn-danger">未</button>
-                        {% endif %}
-                    </td>
-                    <td>{{ op.phone }}</td>
-                    <td>{{ op.created_at }}</td>
-                    <td><a href="{{ url_for('edit_op', op_id=op.id) }}" >Edit</a></td>
+                    <td>{{ card.id }}</td>
+                    <td>{{ card.lang }}</td>
+                    <td>{{ card.word }}</td>
+                    <td>{{ card.func }}</td>
+                    <td>{{ card.meaning }}</td>
+                    <td>{{ card.learnt }}</td>
+                    <td>{{ card.difficulty }}</td>
+                    <td>{{ card.created_at }}</td>
+                    <td><a href="{{ url_for('edit_card', id=card.id) }}" >Edit</a></td>
                 </tr>
                 {% endfor %}
             </tbody>

@@ -3,7 +3,7 @@ from flask import Flask, redirect, url_for, flash
 from flask_bootstrap import Bootstrap5
 from flask import render_template
 from models import Card, User
-from forms import CardRegisterForm, EditOpForm, LoginForm
+from forms import CardRegisterForm, EditCardForm, LoginForm
 from models import db_session
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -45,10 +45,6 @@ def login():
     return render_template('login.html', form=form)
 
 
-@app.route('/')
-def index():
-    return 'Hello, world!'
-
 @app.route('/register', methods=['GET', 'POST'])
 @login_required
 def register():
@@ -63,30 +59,28 @@ def register():
 
 
 @app.route('/list')
+@login_required
 def list_cards():
     cards = Card.query.all()
     return render_template('list_card.html', title="List of Cards", cards=cards)
 
-@app.route('/edit/<int:op_id>', methods=['GET', 'POST'])
+@app.route('/edit/<int:id>', methods=['GET', 'POST'])
 @login_required
-def edit_op(op_id):
-    op = db_session.query(Op).filter_by(id=op_id).first()
-    form = EditOpForm(obj=op)
+def edit_card(id):
+    card = db_session.query(Card).filter_by(id=id).first()
+    form = EditCardForm(obj=card)
     if form.validate_on_submit():
-        op.patient_id = form.patient_id.data
-        op.name = form.name.data
-        op.diagnosis = form.diagnosis.data
-        op.urgency = form.urgency.data
-        op.memo = form.memo.data
-        op.op_date = form.op_date.data
-        op.preop_date = form.preop_date.data
-        op.date_set = form.date_set.data
-        op.patient_notified = form.patient_notified.data
-        op.orders_committed = form.orders_committed.data
+        card.lang = form.lang.data
+        card.word = form.word.data
+        card.func = form.func.data
+        card.meaning = form.meaning.data
+        card.memo = form.memo.data
+        card.learnt = form.learnt.data
+        card.difficulty = form.difficulty.data
         
         db_session.commit()
         return redirect(url_for('list_ops'))
-    return render_template('edit_op.html', form=form)
+    return render_template('edit_card.html', form=form)
 
 @app.route('/logout')
 @login_required

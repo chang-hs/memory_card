@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% import "bootstrap5/form.html" as wtf %}
 
-{% block title %}手術登録{% endblock %}
+{% block title %}単語登録{% endblock %}
 {% block content %}
     <nav class="navbar navbar-expand-lg bg-body-tertiary mb-3">
         <div class="container-fluid">
@@ -14,7 +14,7 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav">
-                    <a class="nav-link" href="{{ url_for('list_ops') }}">List</a>
+                    <a class="nav-link" href="{{ url_for('list_cards') }}">List</a>
                     <a class="nav-link active" aria-current="page" href="{{ url_for('register') }}">Register</a>
                 </div>
                 <div class="navbar-nav ms-auto me-3">
@@ -24,7 +24,7 @@
         </div>
     </nav>
 <div>
-    <h2>Register Op</h2>
+    <h2>Register Word</h2>
     {{ wtf.render_form(form ) }}
 </div>
 {% endblock %}

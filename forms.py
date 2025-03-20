@@ -1,14 +1,16 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField, DateField, BooleanField, SubmitField, PasswordField
+from wtforms import SelectField, StringField, IntegerField, DateField, BooleanField, SubmitField, PasswordField, DateTimeField
 from wtforms.validators import InputRequired, Length, Optional
 
 class CardRegisterForm(FlaskForm):
-    lang = [('1', 'French'), ('2', 'Latin'), ('3', 'Korean'), ('4', 'English')]
+    lang = SelectField('Latin', choices=['Latin', 'French', 'Korean', 'English'])
     word = StringField('Word', validators=[InputRequired(),Length(max=20)])
     func = StringField('Funtion')
     meaning = StringField('Meaning', validators=[InputRequired()])
+    memo = StringField('Memo')
     learnt = BooleanField('Learnt', default=False)
     difficult = IntegerField('Difficulty', default=0)
+    submit = SubmitField('Submit')
 
 class CardDisplayForm(FlaskForm):
     id = IntegerField('ID')
@@ -16,34 +18,18 @@ class CardDisplayForm(FlaskForm):
     func = StringField('Funtion')
     meaning = StringField('Meaning', validators=[InputRequired()])
     learnt = BooleanField('Learnt')
-    difficult = IntegerField('Difficulty')
+    difficulty = IntegerField('Difficulty')
 
-class OpForm(FlaskForm):
-    patient_id = StringField('patient_id', validators=[InputRequired(), Length(min=8, max=8)])
-    name = StringField('name', validators=[InputRequired()])
-    age = IntegerField('age', validators=[Optional()])
-    diagnosis = StringField('diagnosis', validators=[InputRequired()])
-    op_duration = StringField('op_duration')
-    urgency = IntegerField('urgency')
-    memo = StringField('memo')
-    phone = StringField('phone')
-    email = StringField('email')
-    submit = SubmitField('Submit')
-
-class EditOpForm(FlaskForm):
+class EditCardForm(FlaskForm):
     id = StringField('id')
-    patient_id = StringField('patient_id', validators=[InputRequired(), Length(min=8, max=8)])
-    name = StringField('name', validators=[InputRequired()])
-    age = IntegerField('age', validators=[Optional()])
-    diagnosis = StringField('diagnosis', validators=[InputRequired()])
-    op_duration = StringField('op_duration')
-    urgency = IntegerField('urgency')
-    memo = StringField('memo')
-    op_date = DateField('op_date', validators=[Optional()])
-    preop_date = DateField('preop_date',validators=[Optional()])
-    date_set = BooleanField('date_set')
-    patient_notified = BooleanField('patient_notified')
-    orders_committed = BooleanField('orders_committed')
+    lang = SelectField('lang', choices=['Latin', 'French', 'Korean', 'English'])
+    word = StringField('Word', validators=[InputRequired()])
+    func = StringField('Func')
+    meaning = StringField('Meaning', validators=[InputRequired()])
+    memo = StringField('Memo')
+    learnt = BooleanField('Learnt')
+    difficulty = IntegerField('Difficulty')
+    created_at = DateTimeField('Created')
     submit = SubmitField('Submit')
 
 class LoginForm(FlaskForm):

@@ -27,6 +27,7 @@ class Card(Base):
     word: Mapped[str] = mapped_column(String)
     func: Mapped[str] = mapped_column(String, nullable=True)
     meaning: Mapped[str] = mapped_column(String)
+    memo: Mapped[str] = mapped_column(String, nullable=True)
     created_at: Mapped[DateTime] = mapped_column(DateTime, default=functions.now())
     learnt: Mapped[bool] = mapped_column(Boolean, default=False)
     difficulty: Mapped[int] = mapped_column(Integer, default=0)
