@@ -79,7 +79,7 @@ def edit_card(id):
         card.difficulty = form.difficulty.data
         
         db_session.commit()
-        return redirect(url_for('list_ops'))
+        return redirect(url_for('list_cards'))
     return render_template('edit_card.html', form=form)
 
 @app.route('/logout')
