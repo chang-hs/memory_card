@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% block title%}{{ title }}{% endblock %}
-{% set weekday_list = ['月', '火', '水', '木', '金', '土', '日'] %}
 {% block content %}
     <nav class="navbar navbar-expand-lg bg-body-tertiary mb-3">
         <div class="container-fluid">
@@ -13,12 +12,24 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav">
-                    <a class="nav-link active" aria-current="page" href="{{ url_for('list_cards', lang='all') }}">List</a>
-                    <a class="nav-link" href="{{ url_for('register') }}">Register</a>
+                    <a class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            List
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <li><a class="dropdown-item" href="{{ url_for('list_cards', lang='all') }}">All</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('list_cards', lang='Latin') }}">Latin</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('list_cards', lang='French') }}">French</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('list_cards', lang='Korean') }}">Korean</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('list_cards', lang='Greek') }}">Greek</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('list_cards', lang='English') }}">English</a></li>
+                        </ul>
+                    </a>
+                     <a class="nav-link" aria-current="page" href="{{ url_for('register') }}">Register</a>
                 </div>
-                <div class="navbar-bav ms-auto me-3">
+                <li class="navbar-nav ms-auto me-3">
                     <a class="nav-link" href="{{ url_for('logout')}}">Logout</a>
-                </div>
+                </li>
             </div>
         </div>
     </nav>

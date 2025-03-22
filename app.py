@@ -38,7 +38,7 @@ def login():
         user = User.query.filter_by(username=form.username.data).first()
         if user and check_password_hash(user.password, form.password.data):
             login_user(user)
-            return redirect(url_for('list_cards'))
+            return redirect(url_for('list_cards', lang='all'))
         else:
             flash('Invalid username or password', 'danger')
             return redirect(url_for('login'))
