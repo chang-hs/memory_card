@@ -57,12 +57,17 @@ def register():
         return redirect(url_for('register'))
     return render_template('register.html', form=form)
 
-
-@app.route('/list')
+@app.route('/list/<lang>')
 @login_required
-def list_cards():
-    cards = Card.query.all()
-    return render_template('list_card.html', title="List of Cards", cards=cards)
+def list_cards(lang):
+    if lang == 'all':
+        cards = Card.query.all()
+    else:
+        cards = Card.query.filter_by(lang=lang)
+    return render_template('list_card.html', title="List of cards", cards=cards)
+
+
+
 
 @app.route('/edit/<int:id>', methods=['GET', 'POST'])
 @login_required
