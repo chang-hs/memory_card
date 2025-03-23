@@ -31,6 +31,12 @@ def set_user_password(username, password):
     db_session.add(new_user)
     db_session.commit()
 
+def update_user_password(username, password):
+    user = User.query.filter_by(username=username).first()
+    if user:
+        user.password = generate_password_hash(password)
+    db_session.commit()
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
