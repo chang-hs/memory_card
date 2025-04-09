@@ -5,7 +5,7 @@ from wtforms.validators import InputRequired, Length, Optional
 class CardRegisterForm(FlaskForm):
     lang = SelectField('Latin', choices=['Latin', 'French', 'Korean', 'Greek', 'English'])
     word = StringField('Word', validators=[InputRequired(),Length(max=40)])
-    func = StringField('Funtion')
+    func = StringField('Function')
     meaning = StringField('Meaning', validators=[InputRequired()])
     memo = StringField('Memo')
     learnt = BooleanField('Learnt', default=False)
@@ -15,7 +15,7 @@ class CardRegisterForm(FlaskForm):
 class CardDisplayForm(FlaskForm):
     id = IntegerField('ID')
     word = StringField('Word', validators=[InputRequired(),Length(max=40)])
-    func = StringField('Funtion')
+    func = StringField('Function')
     meaning = StringField('Meaning', validators=[InputRequired()])
     learnt = BooleanField('Learnt')
     difficulty = IntegerField('Difficulty')
