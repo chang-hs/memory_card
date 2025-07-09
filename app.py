@@ -1,5 +1,5 @@
 import locale
-from flask import Flask, redirect, url_for, flash
+from flask import Flask, redirect, url_for, flash, session
 from flask_bootstrap import Bootstrap5
 from flask import render_template, request, abort
 from models import Card, User
@@ -120,33 +120,52 @@ def logout():
 @login_required
 def test_words(lang, dif, index=0, side=0):
     action = request.form.get('action')
-    print(action)
+    
+    plus_ids = session.get('plus_ids', None)
+    if plus_ids is None:
+        plus_ids = []
+    minus_ids = session.get('minus_ids', None)
+    if minus_ids is None:
+        minus_ids = []
         
     words = Card.query.filter(Card.lang == lang, Card.difficulty >= dif).all()
-    print(len(words))
 
     if action == "failure" and index > 0:
         prev_word = words[index-1]
-        prev_word.difficulty = prev_word.difficulty + 1
-        db_session.commit()
-    else:
+        plus_ids.append(prev_word.id)
+    elif action == "success" and index > 0:
         prev_word = words[index-1]
         if prev_word.difficulty != 0:
-            prev_word.difficulty = prev_word.difficulty - 1
-            db_session.commit()
+            minus_ids.append(prev_word.id)
 
     if index == len(words):
+        print(f"minus_ids: {minus_ids}")
+        print(f"plus_ids: {plus_ids}")
+        for word_id in minus_ids:
+            word = Card.query.filter(Card.id == word_id).first()
+            print(f"word: {word.word}, difficulty: {word.difficulty}")
+            word.difficulty = word.difficulty - 1
+            db_session.commit()
+        for word_id in plus_ids:
+            word = Card.query.filter(Card.id == word_id).first()
+            print(f"word: {word.word}, difficulty: {word.difficulty}")
+            word.difficulty = word.difficulty + 1
+            db_session.commit()
+        session.pop("minus_ids", None)
+        session.pop("plus_ids", None)
         return render_template("message.html", message="Congratulation! You finished the test.")
     elif not (0 <= index < len(words)):
         abort(404)
     else:
+        session["minus_ids"] = minus_ids
+        session["plus_ids"] = plus_ids
         word = words[index]
-    if side == 0:
-        return render_template("show_top.html", word=word.word, lang=lang, dif=dif, index=index)
-    else:
-        return render_template("show_bottom.html", word=word.word, lang=lang, dif=dif, index=index,
-                               meaning=word.meaning, function=word.func,
-                               memo=word.memo, next_index=index+1)
+        if side == 0:
+            return render_template("show_top.html", word=word.word, lang=lang, dif=dif, index=index)
+        else:
+            return render_template("show_bottom.html", word=word.word, lang=lang, dif=dif, index=index,
+                                meaning=word.meaning, function=word.func,
+                                memo=word.memo, next_index=index+1)
     
 
 @app.route("/test", methods=["GET", "POST"])
