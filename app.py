@@ -1,9 +1,9 @@
 import locale
 from flask import Flask, redirect, url_for, flash
 from flask_bootstrap import Bootstrap5
-from flask import render_template
+from flask import render_template, request, abort
 from models import Card, User
-from forms import CardRegisterForm, EditCardForm, LoginForm
+from forms import CardRegisterForm, EditCardForm, LoginForm, StartTestForm
 from models import db_session
 from flask_login import (
     LoginManager,
@@ -115,6 +115,49 @@ def logout():
     logout_user()
     return redirect(url_for("login"))
 
+@app.route("/test/<string:lang>/<int:dif>/<int:index>/<int:side>",
+            methods=["GET", "POST"])
+@login_required
+def test_words(lang, dif, index=0, side=0):
+    action = request.form.get('action')
+    print(action)
+        
+    words = Card.query.filter(Card.lang == lang, Card.difficulty >= dif).all()
+    print(len(words))
+
+    if action == "failure" and index > 0:
+        prev_word = words[index-1]
+        prev_word.difficulty = prev_word.difficulty + 1
+        db_session.commit()
+    else:
+        prev_word = words[index-1]
+        if prev_word.difficulty != 0:
+            prev_word.difficulty = prev_word.difficulty - 1
+            db_session.commit()
+
+    if index == len(words):
+        return render_template("message.html", message="Congratulation! You finished the test.")
+    elif not (0 <= index < len(words)):
+        abort(404)
+    else:
+        word = words[index]
+    if side == 0:
+        return render_template("show_top.html", word=word.word, lang=lang, dif=dif, index=index)
+    else:
+        return render_template("show_bottom.html", word=word.word, lang=lang, dif=dif, index=index,
+                               meaning=word.meaning, function=word.func,
+                               memo=word.memo, next_index=index+1)
+    
+
+@app.route("/test", methods=["GET", "POST"])
+@login_required
+def start_test():
+    form = StartTestForm()
+    if form.validate_on_submit():
+        lang = form.lang.data
+        dif = form.dif.data
+        return redirect(url_for("test_words", lang=lang, dif=dif, index=0, side=0))
+    return render_template("start_test.html", form=form)
 
 if __name__ == "__main__":
     app.run(debug=True, port=5500)

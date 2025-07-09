@@ -1,0 +1,28 @@
+{% extends "base.html" %} {% import "bootstrap5/form.html" as wtf %} {% block
+title %}Answer{% endblock %} {% block content %}
+<div>
+  <h2>{{ word }}</h2>
+</div>
+<div>
+  <h2>{{ function }}</h2>
+</div>
+<div>
+  <h2>{{ meaning }}</h2>
+</div>
+<div>
+  <h2>{{ memo }}</h2>
+</div>
+<div>
+  <form
+    method="post"
+    action="{{ url_for('test_words', lang=lang, dif=dif, index=next_index, side=0) }}"
+  >
+    <button type="submit" class="btn btn-info" name="action" value="success">
+      Success
+    </button>
+    <button type="submit" class="btn btn-danger" name="action" value="failure">
+      Failure
+    </button>
+  </form>
+</div>
+{% endblock %}
